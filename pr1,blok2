@@ -1,0 +1,37 @@
+import urllib.request
+from bs4 import BeautifulSoup
+import json
+
+def get_airport_data():
+    url = 'https://en.wikipedia.org/wiki/List_of_airports_by_IATA_airport_code:_P'
+    html = urllib.request.urlopen(url).read()
+    soup = BeautifulSoup(html, 'html.parser')
+    table = soup.find('table', {'class': 'wikitable sortable'})
+    rows = table.findAll('tr')
+
+    data = {}
+
+    for row in rows:
+        tds = row.findAll('td')
+        if len(tds) != 2:
+            continue
+
+        name = tds[0].find('a').string.strip()
+        iata_code = tds[1].string
+        if not name or not iata_code:
+            continue
+        data[iata_code] = name
+
+    return data
+    airport_data = get_airport_data()
+output = json.dumps(airport_data, indent=4)
+print(output)
+with open(‘airport_data.json’, ‘w’) as f:
+f.write(output)
+
+def get_iata_by_name(name):
+for k, v in airport_data.items():
+if v == name:
+return k
+
+raise KeyError('Airport not found')
