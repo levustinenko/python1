@@ -1,0 +1,66 @@
+import requests
+import sys
+
+class DNACompressor:
+    def __init__(self, dna_sequence):
+        self.original_sequence = dna_sequence
+        self.compressed_sequence = self._compress_sequence()
+
+    def _compress_sequence(self):
+        compressed_seq = 0b00
+
+        for nucleotide in self.original_sequence:
+            compressed_seq <<= 2  # Bitwise left shift by 2 positions for each nucleotide
+            if nucleotide == 'A':
+                compressed_seq |= 0b00
+            elif nucleotide == 'C':
+                compressed_seq |= 0b01
+            elif nucleotide == 'G':
+                compressed_seq |= 0b10
+            elif nucleotide == 'T':
+                compressed_seq |= 0b11
+
+        return compressed_seq
+
+    def decompress_sequence(self):
+        decompressed_seq = []
+        compressed_seq_copy = self.compressed_sequence
+
+        while compressed_seq_copy:
+            nucleotide = compressed_seq_copy & 0b11  # Extract the last 2 bits
+            compressed_seq_copy >>= 2  # Bitwise right shift by 2 positions
+            if nucleotide == 0b00:
+                decompressed_seq.append('A')
+            elif nucleotide == 0b01:
+                decompressed_seq.append('C')
+            elif nucleotide == 0b10:
+                decompressed_seq.append('G')
+            elif nucleotide == 0b11:
+                decompressed_seq.append('T')
+
+        decompressed_seq.reverse()
+        return ''.join(decompressed_seq)
+
+    def __str__(self):
+        return f"Original Size: {sys.getsizeof(self.original_sequence)} bytes\n" \
+               f"Compressed Size: {sys.getsizeof(self.compressed_sequence)} bytes"
+
+
+def get_random_dna_sequence(length=1000):
+    url = f'https://www.bioinformatics.org/sms2/random_dna.html?numres={length}&submit=Generate'
+    response = requests.get(url)
+    return response.text
+
+lengths = [1000, 10000, 100000, 1000000, 10000000]
+
+for length in lengths:
+    dna_sequence = get_random_dna_sequence(length)
+    compressor = DNACompressor(dna_sequence)
+
+    print(f"\nOriginal DNA Sequence (first 20 characters): {dna_sequence[:20]}...")
+    print(compressor)
+    decompressed_sequence = compressor.decompress_sequence()
+
+    assert decompressed_sequence == dna_sequence, "Decompression failed!"
+
+    print(f"Decompressed DNA Sequence (first 20 characters): {decompressed_sequence[:20]}...")
