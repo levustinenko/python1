@@ -1,0 +1,16 @@
+import random
+
+original_dict = {f"key{i}": random.uniform(1, 10) for i in range(5)}  # Пример генерации словаря
+
+print("Исходный словарь:", original_dict)
+
+unique_values_dict = {}
+for key, value in original_dict.items():
+    if value not in unique_values_dict:
+        unique_values_dict[value] = [key]
+    else:
+        unique_values_dict[value].append(key)
+
+result_list = [(value, keys) for value, keys in unique_values_dict.items()]
+
+print("Список кортежей (значение, связанные ключи):", result_list)
