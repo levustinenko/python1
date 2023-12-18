@@ -1,0 +1,18 @@
+import random
+
+list1 = [random.randint(1, 100) for _ in range(5)]
+
+list2 = [random.randint(1, 100) for _ in range(5)]
+
+print("Первый список:", list1)
+print("Второй список:", list2)
+
+result_list = []
+
+for i in range(len(list1)):
+    if i % 2 == 0:
+        result_list.append(list1[i])
+    else:
+        result_list.append(list2[i])
+
+print("Третий список:", result_list)
