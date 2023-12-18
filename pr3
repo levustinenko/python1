@@ -1,0 +1,9 @@
+import random
+
+original_list = [random.randint(1, 10) for _ in range(10)] 
+
+print("Исходный список:", original_list)
+
+unique_list = list(set(original_list))
+
+print("Список без дубликатов:", unique_list)
