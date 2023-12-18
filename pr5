@@ -1,0 +1,13 @@
+import random
+
+dict1 = {f"key{i}": random.uniform(1, 10) for i in range(5)}  # Пример генерации словаря
+dict2 = {f"key{i}": random.uniform(5, 15) for i in range(5)}  # Пример генерации второго словаря
+
+print("Первый словарь:", dict1)
+print("Второй словарь:", dict2)
+
+intersection_values = set(dict1.values()) & set(dict2.values())
+
+result_dict = {key: value for key, value in dict1.items() if value in intersection_values}
+
+print("Новый словарь (пересечение значений):", result_dict)
